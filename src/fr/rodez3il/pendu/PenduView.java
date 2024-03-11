@@ -3,12 +3,14 @@ package fr.rodez3il.pendu;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.Set;
 
 public class PenduView extends JFrame {
     private PenduModel model;
     private JLabel motLabel;
     private JLabel tentativesLabel;
     private JTextField lettreField;
+    private JLabel lettresProposees;
 
     public PenduView(PenduModel model) {
         this.model = model;
@@ -21,7 +23,7 @@ public class PenduView extends JFrame {
         JPanel topPanel = new JPanel();
         motLabel = new JLabel(model.getMotAffiche());
         topPanel.add(motLabel);
-        add(topPanel, BorderLayout.CENTER);
+        add(topPanel, BorderLayout.NORTH);
 
         JPanel bottomPanel = new JPanel();
         bottomPanel.setLayout(new FlowLayout());
@@ -38,6 +40,13 @@ public class PenduView extends JFrame {
         bottomPanel.add(tentativesLabel);
         add(bottomPanel, BorderLayout.SOUTH);
 
+        // Indique dans un panneau à droite les lettres déjà proposées
+        JPanel rightPanel = new JPanel();
+        rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
+        lettresProposees = new JLabel("Lettres proposées : ");
+        rightPanel.add(lettresProposees);
+        add(rightPanel, BorderLayout.EAST);
+
         // Écouteur de redimensionnement de la fenêtre
         addComponentListener(new ComponentAdapter() {
             @Override
@@ -53,16 +62,18 @@ public class PenduView extends JFrame {
 
     private void redimensionnerTexte() {
         // Calculer la taille du texte en fonction de la taille de la fenêtre
-        int tailleTexte = getWidth() / 20; // Modifier le 20 pour ajuster l'échelle
+        int tailleTexte = getWidth() / 25;
         Font font = new Font(Font.SANS_SERIF, Font.PLAIN, tailleTexte);
         motLabel.setFont(font);
         lettreField.setFont(font);
         tentativesLabel.setFont(font);
+        lettresProposees.setFont(font);
     }
 
     public void update() {
         motLabel.setText(model.getMotAffiche());
         tentativesLabel.setText("Tentatives restantes : " + model.getTentativesRestantes());
+        mettreAJourLettresProposees(model.getLettresProposees());
         if (model.partieGagnee()) {
             JOptionPane.showMessageDialog(this, "Félicitations, vous avez gagné !");
             System.exit(0);
@@ -84,5 +95,14 @@ public class PenduView extends JFrame {
             JOptionPane.showMessageDialog(this, "Veuillez entrer une seule lettre !");
         }
         lettreField.setText("");
+    }
+
+    // Méthode pour mettre à jour les lettres déjà proposées
+    public void mettreAJourLettresProposees(Set<Character> lettresProposees) {
+        StringBuilder lettresBuilder = new StringBuilder();
+        for (char lettre : lettresProposees) {
+            lettresBuilder.append(lettre).append("\n");
+        }
+        this.lettresProposees.setText("Lettres déjà proposées : " + lettresBuilder.toString());
     }
 }

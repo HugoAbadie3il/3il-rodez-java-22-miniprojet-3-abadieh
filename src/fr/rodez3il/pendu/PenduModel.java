@@ -1,13 +1,18 @@
 package fr.rodez3il.pendu;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class PenduModel {
     private String motATrouver;
     private StringBuilder motAffiche;
     private int tentativesRestantes;
+    private Set<Character> lettresProposees;
 
     public PenduModel(String mot) {
         this.motATrouver = mot.toUpperCase();
         this.motAffiche = new StringBuilder();
+        this.lettresProposees = new HashSet<>();
         for (int i = 0; i < mot.length(); i++) {
             char c = mot.charAt(i);
             if (Character.isLetter(c)) {
@@ -30,7 +35,16 @@ public class PenduModel {
         if (!trouve) {
             tentativesRestantes--;
         }
+        ajoutLettreProposee(lettre);
         return trouve;
+    }
+
+    private void ajoutLettreProposee(char lettre) {
+        lettresProposees.add(lettre);
+    }
+
+    public Set<Character> getLettresProposees() {
+        return lettresProposees;
     }
 
     public boolean partieGagnee() {
