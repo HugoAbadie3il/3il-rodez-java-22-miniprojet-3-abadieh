@@ -11,7 +11,8 @@ public class PenduController {
     }
 
     public static void main(String[] args) {
-        PenduModel model = new PenduModel("PENAUD");
+        ReadWord rw = new ReadWord(141);
+        PenduModel model = new PenduModel(rw.getMot());
         PenduView view = new PenduView(model);
         new PenduController(model, view);
     }

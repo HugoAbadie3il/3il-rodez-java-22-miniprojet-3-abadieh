@@ -7,7 +7,15 @@ public class PenduModel {
 
     public PenduModel(String mot) {
         this.motATrouver = mot.toUpperCase();
-        this.motAffiche = new StringBuilder("_".repeat(mot.length()));
+        this.motAffiche = new StringBuilder();
+        for (int i = 0; i < mot.length(); i++) {
+            char c = mot.charAt(i);
+            if (Character.isLetter(c)) {
+                motAffiche.append("_");
+            } else {
+                motAffiche.append(c);
+            }
+        }
         this.tentativesRestantes = 7;
     }
 

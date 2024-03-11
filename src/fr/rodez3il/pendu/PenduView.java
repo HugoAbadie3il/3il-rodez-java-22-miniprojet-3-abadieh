@@ -38,7 +38,26 @@ public class PenduView extends JFrame {
         bottomPanel.add(tentativesLabel);
         add(bottomPanel, BorderLayout.SOUTH);
 
+        // Écouteur de redimensionnement de la fenêtre
+        addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                redimensionnerTexte();
+            }
+        });
+
+        setMinimumSize(new Dimension(300, 200));
+
         setVisible(true);
+    }
+
+    private void redimensionnerTexte() {
+        // Calculer la taille du texte en fonction de la taille de la fenêtre
+        int tailleTexte = getWidth() / 20; // Modifier le 20 pour ajuster l'échelle
+        Font font = new Font(Font.SANS_SERIF, Font.PLAIN, tailleTexte);
+        motLabel.setFont(font);
+        lettreField.setFont(font);
+        tentativesLabel.setFont(font);
     }
 
     public void update() {
