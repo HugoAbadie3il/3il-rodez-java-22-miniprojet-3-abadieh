@@ -5,15 +5,16 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.Set;
 
+/**
+ * Classe représentant la vue du jeu du Pendu.
+ */
 public class PenduView extends JFrame {
-    private PenduModel model;
     private JLabel motLabel;
     private JLabel tentativesLabel;
     private JTextField lettreField;
-    private JLabel lettresProposees;
+    private JTextArea lettresProposees;
 
-    public PenduView(PenduModel model) {
-        this.model = model;
+    public PenduView(String motAffiche, int tentativesRestantes, Set<Character> lettresActuelles) {
         setTitle("Jeu du Pendu");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(300, 200); // Taille de la fenêtre
@@ -21,7 +22,7 @@ public class PenduView extends JFrame {
         setLayout(new BorderLayout());
 
         JPanel topPanel = new JPanel();
-        motLabel = new JLabel(model.getMotAffiche());
+        motLabel = new JLabel(motAffiche);
         topPanel.add(motLabel);
         add(topPanel, BorderLayout.NORTH);
 
@@ -36,15 +37,17 @@ public class PenduView extends JFrame {
             }
         });
         bottomPanel.add(validerButton);
-        tentativesLabel = new JLabel("Tentatives restantes : " + model.getTentativesRestantes());
+        tentativesLabel = new JLabel("Tentatives restantes : " + tentativesRestantes);
         bottomPanel.add(tentativesLabel);
         add(bottomPanel, BorderLayout.SOUTH);
 
         // Indique dans un panneau à droite les lettres déjà proposées
         JPanel rightPanel = new JPanel();
-        rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
-        lettresProposees = new JLabel("Lettres proposées : ");
-        rightPanel.add(lettresProposees);
+        rightPanel.setLayout(new BorderLayout());
+        lettresProposees = new JTextArea();
+        lettresProposees.setEditable(false);
+        JScrollPane scrollPane = new JScrollPane(lettresProposees);
+        rightPanel.add(scrollPane, BorderLayout.CENTER);
         add(rightPanel, BorderLayout.EAST);
 
         // Écouteur de redimensionnement de la fenêtre
@@ -83,10 +86,10 @@ public class PenduView extends JFrame {
         }
     }
 
-    public void validerLettre() {
+    public void validerLettre(boolean trouve) {
         String lettre = lettreField.getText().toUpperCase();
         if (lettre.length() == 1 && Character.isLetter(lettre.charAt(0))) {
-            boolean trouve = model.estLettreDansMot(lettre.charAt(0));
+            // boolean trouve = model.estLettreDansMot(lettre.charAt(0));
             if (!trouve) {
                 JOptionPane.showMessageDialog(this, "La lettre n'est pas dans le mot !");
             }
@@ -103,6 +106,6 @@ public class PenduView extends JFrame {
         for (char lettre : lettresProposees) {
             lettresBuilder.append(lettre).append("\n");
         }
-        this.lettresProposees.setText("Lettres déjà proposées : " + lettresBuilder.toString());
+        this.lettresProposees.setText("Lettres déjà proposées :\n" + lettresBuilder.toString());
     }
 }
