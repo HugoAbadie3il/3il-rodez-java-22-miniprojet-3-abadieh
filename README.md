@@ -20,12 +20,12 @@ Projet réalisé par Hugo ABADIE.
 
 ## Reste à faire
 
-- Javadoc
-- Tests unitaires
 - Affiner modèle MVC
-
+- Implémenter les fonctionnalités manquantes
+- Ajouter des tests fonctionnels
 
 ## Feedback
 
 Projet intéressant, bonne porte d'entrée pour la création d'interfaces graphiques.
 Créer le projet de 0 permet de mieux comprendre l'ensemble du code le rendant plus maintenable.
+Avec ce projet j'ai appris à coder des interfaces graphiques de manière plus "propres" (utilisation d'architecture MVC).
