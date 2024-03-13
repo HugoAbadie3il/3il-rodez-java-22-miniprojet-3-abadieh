@@ -16,7 +16,7 @@ Projet réalisé par Hugo ABADIE.
 - [x] Vérification de la validité des entrées utilisateur (lettre de l'alphabet uniquement).
 - [x] Gestion du décompte des tentatives restantes.
 - [x] Gestion de la victoire ou de la défaite du joueur.
-- [ ] Possibilité de rejouer une partie après la fin d'une partie.
+- [x] Possibilité de rejouer une partie après la fin d'une partie.
 
 ## Reste à faire
 

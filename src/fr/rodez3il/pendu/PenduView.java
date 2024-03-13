@@ -9,12 +9,26 @@ import java.util.Set;
  * Classe représentant la vue du jeu du Pendu.
  */
 public class PenduView extends JFrame {
+    private PenduModel model;
     private JLabel motLabel;
+    private JLabel penduLabel;
     private JLabel tentativesLabel;
     private JTextField lettreField;
     private JTextArea lettresProposees;
 
-    public PenduView(String motAffiche, int tentativesRestantes, Set<Character> lettresActuelles) {
+    // ASCII art du pendu
+    private final String[] penduASCII = {
+            "      _____",
+            "     |     |",
+            "     |     O",
+            "     |    /|\\",
+            "     |     |",
+            "     |    / \\",
+            "  ___|___",
+    };
+
+    public PenduView(PenduModel model) {
+        this.model = model;
         setTitle("Jeu du Pendu");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(300, 200); // Taille de la fenêtre
@@ -22,9 +36,13 @@ public class PenduView extends JFrame {
         setLayout(new BorderLayout());
 
         JPanel topPanel = new JPanel();
-        motLabel = new JLabel(motAffiche);
+        motLabel = new JLabel(model.getMotAffiche());
         topPanel.add(motLabel);
         add(topPanel, BorderLayout.NORTH);
+
+        // Panel pour afficher le pendu
+        penduLabel = new JLabel();
+        add(penduLabel, BorderLayout.WEST);
 
         JPanel bottomPanel = new JPanel();
         bottomPanel.setLayout(new FlowLayout());
@@ -37,7 +55,7 @@ public class PenduView extends JFrame {
             }
         });
         bottomPanel.add(validerButton);
-        tentativesLabel = new JLabel("Tentatives restantes : " + tentativesRestantes);
+        tentativesLabel = new JLabel("Tentatives restantes : " + model.getTentativesRestantes());
         bottomPanel.add(tentativesLabel);
         add(bottomPanel, BorderLayout.SOUTH);
 
@@ -77,19 +95,50 @@ public class PenduView extends JFrame {
         motLabel.setText(model.getMotAffiche());
         tentativesLabel.setText("Tentatives restantes : " + model.getTentativesRestantes());
         mettreAJourLettresProposees(model.getLettresProposees());
-        if (model.partieGagnee()) {
-            JOptionPane.showMessageDialog(this, "Félicitations, vous avez gagné !");
-            System.exit(0);
-        } else if (model.partiePerdue()) {
-            JOptionPane.showMessageDialog(this, "Désolé, vous avez perdu. Le mot était : " + model.getMotATrouver());
-            System.exit(0);
+        afficherPendu();
+        if (model.partieGagnee() || model.partiePerdue()) {
+            if (retry() == JOptionPane.YES_OPTION) {
+                this.dispose();
+                PenduController.lancerPartie();
+            } else {
+                System.exit(0);
+            }
         }
     }
 
-    public void validerLettre(boolean trouve) {
+    private void afficherPendu() {
+        StringBuilder penduBuilder = new StringBuilder("<html>");
+        int i = model.getTentativesRestantes();
+        while (i < 0) {
+            String ligne = penduASCII[i];
+            penduBuilder.append(ligne).append("<br>");
+            i++;
+        }
+        penduBuilder.append("</html>");
+        penduLabel.setText(penduBuilder.toString());
+    }
+
+    private int retry() throws IllegalStateException{
+        JOptionPane fenetreRetry = new JOptionPane();
+        String message;
+        if (model.partieGagnee()) {
+            message = "Félicitations, vous avez gagné !";
+        } else if (model.partiePerdue()){
+            message = "Désolé, vous avez perdu. Le mot était : " + model.getMotATrouver() + ".";
+        }
+        else {
+            throw new IllegalStateException("La partie n'est pas terminée.");
+        }
+        message += "\nVoulez-vous rejouer ?";
+
+        return fenetreRetry.showConfirmDialog(this, message, "Fin de partie", JOptionPane.YES_NO_OPTION);
+
+    }
+
+    public void validerLettre() {
         String lettre = lettreField.getText().toUpperCase();
         if (lettre.length() == 1 && Character.isLetter(lettre.charAt(0))) {
-            // boolean trouve = model.estLettreDansMot(lettre.charAt(0));
+            boolean trouve = model.estLettreDansMot(lettre.charAt(0));
             if (!trouve) {
                 JOptionPane.showMessageDialog(this, "La lettre n'est pas dans le mot !");
             }

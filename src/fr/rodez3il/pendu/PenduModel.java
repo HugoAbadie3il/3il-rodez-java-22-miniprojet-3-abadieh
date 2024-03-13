@@ -5,16 +5,18 @@ import java.util.Set;
 
 public class PenduModel {
     private String motATrouver;
+    private ReadWord rw;
     private StringBuilder motAffiche;
     private int tentativesRestantes;
     private Set<Character> lettresProposees;
 
-    public PenduModel(String mot) {
-        this.motATrouver = mot.toUpperCase();
+    public PenduModel() {
+        this.rw = new ReadWord();
+        this.motATrouver = rw.getMot().toUpperCase();
         this.motAffiche = new StringBuilder();
         this.lettresProposees = new HashSet<>();
-        for (int i = 0; i < mot.length(); i++) {
-            char c = mot.charAt(i);
+        for (int i = 0; i < motATrouver.length(); i++) {
+            char c = motATrouver.charAt(i);
             if (Character.isLetter(c)) {
                 motAffiche.append("_");
             } else {

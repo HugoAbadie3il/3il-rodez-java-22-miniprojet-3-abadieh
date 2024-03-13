@@ -10,10 +10,13 @@ public class PenduController {
         this.view.update();
     }
 
-    public static void main(String[] args) {
-        ReadWord rw = new ReadWord(141);
-        PenduModel model = new PenduModel(rw.getMot());
+    public static void lancerPartie(){
+        PenduModel model = new PenduModel();
         PenduView view = new PenduView(model);
         new PenduController(model, view);
+    }
+
+    public static void main(String[] args) {
+        lancerPartie();
     }
 }
