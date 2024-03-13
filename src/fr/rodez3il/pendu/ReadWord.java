@@ -45,6 +45,7 @@ public class ReadWord {
 
         try (Scanner sc = new Scanner(cheminSrc)) {
 
+            // Récupération des mots et de leurs définitions
             while (sc.hasNextLine()) {
                 String ligne = sc.nextLine();
                 String[] jetons = ligne.split(" ");
@@ -59,6 +60,7 @@ public class ReadWord {
                 defs.add(def.substring(0, def.length() - 1));
             }
 
+            // Sélection aléatoire d'un mot
             int index = rand.nextInt(mots.size());
             this.mot = mots.get(index);
             this.def = defs.get(index);

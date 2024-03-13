@@ -28,6 +28,10 @@ public class PenduView extends JFrame {
             " ___|___",
     };
 
+    /**
+     * Constructeur de la vue du jeu du Pendu.
+     * @param model le modèle du jeu
+     */
     public PenduView(PenduModel model) {
         this.model = model;
         setTitle("Jeu du Pendu");
@@ -36,6 +40,7 @@ public class PenduView extends JFrame {
         setLocationRelativeTo(null); // Centrer la fenêtre sur l'écran
         setLayout(new BorderLayout());
 
+        // Panel pour afficher le mot à trouver
         JPanel topPanel = new JPanel();
         motLabel = new JLabel(model.getMotAffiche());
         topPanel.add(motLabel);
@@ -55,6 +60,7 @@ public class PenduView extends JFrame {
         penduPanel.add(penduLabel);
         add(penduPanel, BorderLayout.WEST);
 
+        // Panel pour entrer une lettre
         JPanel bottomPanel = new JPanel();
         bottomPanel.setLayout(new FlowLayout());
         lettreField = new JTextField(1);
@@ -70,7 +76,7 @@ public class PenduView extends JFrame {
         bottomPanel.add(tentativesLabel);
         add(bottomPanel, BorderLayout.SOUTH);
 
-        // Indique dans un panneau à droite les lettres déjà proposées
+        // Panneau pour afficher les lettres déjà proposées
         JPanel rightPanel = new JPanel();
         rightPanel.setLayout(new BorderLayout());
         lettresProposees = new JTextArea();
@@ -87,11 +93,15 @@ public class PenduView extends JFrame {
             }
         });
 
+        // Définition d'une taille minimale
         setMinimumSize(new Dimension(600,500));
 
         setVisible(true);
     }
 
+    /**
+     * Méthode pour redimensionner le texte en fonction de la taille de la fenêtre.
+     */
     private void redimensionnerTexte() {
         // Calculer la taille du texte en fonction de la taille de la fenêtre
         int tailleTexte = getWidth() / 25;
@@ -102,11 +112,17 @@ public class PenduView extends JFrame {
         lettresProposees.setFont(font);
     }
 
+    /**
+     * Méthode pour mettre à jour la vue.
+     */
     public void update() {
+        // Mise à jour des éléments de la vue
         motLabel.setText(model.getMotAffiche());
         tentativesLabel.setText("Tentatives restantes : " + model.getTentativesRestantes());
         mettreAJourLettresProposees(model.getLettresProposees());
         afficherPendu();
+
+        // Gestion de la fin de partie
         if (model.partieGagnee() || model.partiePerdue()) {
             if (retry() == JOptionPane.YES_OPTION) {
                 this.dispose();
@@ -117,6 +133,9 @@ public class PenduView extends JFrame {
         }
     }
 
+    /**
+     * Méthode pour afficher le pendu ligne par ligne.
+     */
     private void afficherPendu() {
         StringBuilder penduBuilder = new StringBuilder("<html>");
         int i = 0;
@@ -126,9 +145,15 @@ public class PenduView extends JFrame {
             i++;
         }
         penduBuilder.append("</html>");
+        // Remplacer les espaces par des &nbsp; pour que le texte soit bien affiché
         penduLabel.setText(penduBuilder.toString().replace(" ", "&nbsp;"));
     }
 
+    /**
+     * Méthode pour demander à l'utilisateur s'il veut rejouer par l'utilisation d'une boîte de dialogue.
+     * @return la réponse de l'utilisateur
+     * @throws IllegalStateException si la partie n'est pas terminée
+     */
     private int retry() throws IllegalStateException{
         JOptionPane fenetreRetry = new JOptionPane();
         String message;
@@ -146,10 +171,15 @@ public class PenduView extends JFrame {
 
     }
 
+    /**
+     * Méthode pour valider une lettre proposée par l'utilisateur.
+     */
     public void validerLettre() {
+        // Récupérer la lettre proposée par l'utilisateur, mise en majuscule pour gérer la case.
         String lettre = lettreField.getText().toUpperCase();
         if (lettre.length() == 1 && Character.isLetter(lettre.charAt(0))) {
             boolean trouve = model.estLettreDansMot(lettre.charAt(0));
+
             if (!trouve) {
                 JOptionPane.showMessageDialog(this, "La lettre n'est pas dans le mot !");
             }
@@ -160,7 +190,10 @@ public class PenduView extends JFrame {
         lettreField.setText("");
     }
 
-    // Méthode pour mettre à jour les lettres déjà proposées
+    /**
+     * Méthode pour mettre à jour les lettres déjà proposées.
+     * @param lettresProposees l'ensemble des lettres déjà proposées
+     */
     public void mettreAJourLettresProposees(Set<Character> lettresProposees) {
         StringBuilder lettresBuilder = new StringBuilder();
         for (char lettre : lettresProposees) {
