@@ -8,7 +8,7 @@ Projet réalisé par Hugo ABADIE.
 
 - [x] Lecture aléatoire d'un mot à deviner à partir d'un fichier texte donné à la racine du projet.
 - [x] Affichage graphique de l'interface du jeu à l'aide de Swing.
-- [ ] Affichage graphique du pendu qui évolue en fonction des erreurs du joueur.
+- [x] Affichage graphique du pendu qui évolue en fonction des erreurs du joueur.
 - [x] Affichage graphique des lettres déjà proposées par le joueur.
 - [ ] Affichage (ou non) de la définition (niveau de difficulté).
 - [ ] Utilisation (ou non) d'un timer (niveau de difficulté).

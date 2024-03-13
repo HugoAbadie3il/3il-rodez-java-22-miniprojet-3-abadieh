@@ -15,23 +15,24 @@ public class PenduView extends JFrame {
     private JLabel tentativesLabel;
     private JTextField lettreField;
     private JTextArea lettresProposees;
+    private JLabel difficulteLabel;
 
     // ASCII art du pendu
     private final String[] penduASCII = {
             "      _____",
-            "     |     |",
+            "     |      |",
             "     |     O",
-            "     |    /|\\",
-            "     |     |",
-            "     |    / \\",
-            "  ___|___",
+            "     |     /|\\",
+            "     |      |",
+            "     |     / \\",
+            " ___|___",
     };
 
     public PenduView(PenduModel model) {
         this.model = model;
         setTitle("Jeu du Pendu");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(300, 200); // Taille de la fenêtre
+        setSize(600, 500); // Taille de la fenêtre
         setLocationRelativeTo(null); // Centrer la fenêtre sur l'écran
         setLayout(new BorderLayout());
 
@@ -40,9 +41,19 @@ public class PenduView extends JFrame {
         topPanel.add(motLabel);
         add(topPanel, BorderLayout.NORTH);
 
+        // Panel difficulté
+        JPanel difficultePanel = new JPanel();
+        difficulteLabel = new JLabel();
+        difficulteLabel.setText("Difficulté max, pas de timer");
+        difficultePanel.add(difficulteLabel);
+        add(difficultePanel, BorderLayout.CENTER);
+
         // Panel pour afficher le pendu
+        JPanel penduPanel = new JPanel();
         penduLabel = new JLabel();
-        add(penduLabel, BorderLayout.WEST);
+        afficherPendu();
+        penduPanel.add(penduLabel);
+        add(penduPanel, BorderLayout.WEST);
 
         JPanel bottomPanel = new JPanel();
         bottomPanel.setLayout(new FlowLayout());
@@ -76,7 +87,7 @@ public class PenduView extends JFrame {
             }
         });
 
-        setMinimumSize(new Dimension(300, 200));
+        setMinimumSize(new Dimension(600,500));
 
         setVisible(true);
     }
@@ -108,14 +119,14 @@ public class PenduView extends JFrame {
 
     private void afficherPendu() {
         StringBuilder penduBuilder = new StringBuilder("<html>");
-        int i = model.getTentativesRestantes();
-        while (i < 0) {
+        int i = 0;
+        while (i < 7 - model.getTentativesRestantes()) {
             String ligne = penduASCII[i];
             penduBuilder.append(ligne).append("<br>");
             i++;
         }
         penduBuilder.append("</html>");
-        penduLabel.setText(penduBuilder.toString());
+        penduLabel.setText(penduBuilder.toString().replace(" ", "&nbsp;"));
     }
 
     private int retry() throws IllegalStateException{
